@@ -16,7 +16,18 @@ def clock():
 
 @app.route('/stock', methods=['POST'])
 def stock():
-    company_codes = ["005930", "000660", "005380"]
+    # company_codes = ["005930", "000660", "005380"]
+
+    data = request.get_json()
+    code1 = data['code1']
+    code2 = data['code2']
+    code3 = data['code3']
+
+    company_codes = []
+    company_codes.append(code1)
+    company_codes.append(code2)
+    company_codes.append(code3)
+
     prices = []
     for item in company_codes:
         now_price = get_price(item)
