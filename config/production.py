@@ -1,0 +1,3 @@
+from config.default import *
+
+SECRET_KEY = b'\x05\xad9\xec$\xe6p\x06\x87\xec\xc1\xf4\xbdqC\xc4'
