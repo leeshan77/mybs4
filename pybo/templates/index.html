@@ -1,0 +1,48 @@
+<html>
+<head>
+    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+
+</head>
+<body>
+    <p><a href="/clock">현재시간</a></p>
+    <p id="example">AJAX</p>
+    <input type="text" id="code1" placeholder="code1">
+    <input type="text" id="code2" placeholder="code2">
+    <input type="text" id="code3" placeholder="code3">
+    <input type="button" value="Run" onclick="run()">
+
+    <p id="sise"></p>
+    <p id="time"></p>
+
+    <script>
+        function run_ajax(){
+
+            $.ajax({
+                type: 'POST',
+                url: '/stock',
+                dataType : 'JSON',
+                contentType: "application/json",
+                success: function(res){
+
+                    $('#sise').text( res.result3.code1 + "   " +
+                        res.result3.code2 + "   " + res.result3.code3 );
+                    $('#time').text( res.now );
+
+                },
+                error: function(request, status, error){
+                    alert('ajax 통신 실패');
+                    alert(error);
+                }
+            });
+
+
+        }
+
+        function run() {
+            setInterval(run_ajax, 2000);
+        }
+
+    </script>
+
+</body>
+</html>
