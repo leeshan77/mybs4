@@ -3,28 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
 
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.action_chains import ActionChains
-import pyperclip
-import time
-from pyvirtualdisplay import Display
-
 bp = Blueprint('main', __name__, url_prefix='/')
-
-display = Display(visible=0, size=(1920, 1080))
-display.start()
-
-chrome_options = webdriver.ChromeOptions()
-chrome_options.add_argument("--headless")
-chrome_options.add_argument("--no-sandbox")
-chrome_options.add_argument("--disable-dev-shm-usage")
-
-#chrome_options.add_argument('headless')
-#chrome_options.add_argument("--disable-gpu")
-#chrome_options.add_argument("lang=ko_KR")
-chrome_options.add_argument(
-    "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36")
 
 @bp.route('/')
 def index():
@@ -33,7 +12,6 @@ def index():
 @bp.route('/clock')
 def clock():
     return render_template('clock.html')
-
 
 @bp.route('/stock', methods=['POST'])
 def stock():
@@ -47,12 +25,10 @@ def stock():
     company_codes.append(code2)
     company_codes.append(code3)
 
-    prices = selenium_price(company_codes)
-
-    #prices = []
-    #for item in company_codes:
-    #    now_price = selenium_price(item)
-    #    prices.append(now_price)
+    prices = []
+    for code in company_codes:
+        now_price = bs4_price(code)
+        prices.append(now_price)
 
     sise = {
         'code1': prices[0], 'code2': prices[1], 'code3': prices[2]
@@ -80,26 +56,6 @@ def get_bsoup(company_code):
     else:
         print(result.status_code)
 
-def selenium_price(company_codes):
-    path = '/home/ubuntu/chromedriver'
-    driver = webdriver.Chrome(path, chrome_options=chrome_options)
-    # driver = webdriver.Chrome('/selenium/chromedriver', chrome_options=chrome_options)
-    driver.implicitly_wait(10)
-
-    prices = []
-    for code in company_codes:
-        url = 'https://m.kbsec.com/go.able?linkcd=m04010000&flag=0&JmGb=K&stockcode=' + code
-        driver.get(url)
-        driver.implicitly_wait(10)
-
-        select = '#container > form > div.stockInfoBox > div:nth-child(1) > div.cellL.stockToday.stockUp > strong'
-        time.sleep(1)
-        selected = driver.find_element_by_css_selector(select)
-
-        now_price = selected.text
-        prices.append(now_price)
-
-    return prices
 
 
 

@@ -6,8 +6,6 @@ def create_app():
     from .views import main_views
     app.register_blueprint(main_views.bp)
 
-    app.config.from_envvar('APP_CONFIG_FILE')
-
     return app
 
 
